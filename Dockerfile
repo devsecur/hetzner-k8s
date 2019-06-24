@@ -1,9 +1,8 @@
 FROM alpine
 
 # Set environment variables
-ENV PATH="/usr/local/go/bin:${PATH}" \
-    GOPATH="/opt/go/ " \
-    PATH="${PATH}:${GOPATH}/bin" \
+ENV GOPATH="/opt/go/" \
+    PATH="/usr/local/go/bin:${PATH}:/opt/go/bin" \
     KUBECONFIG="/etc/kube/config"
 
 # Install environment
