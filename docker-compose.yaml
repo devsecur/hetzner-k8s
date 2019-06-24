@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  client:
+    build: .
+    environment:
+      - "HCLOUD_TOKEN=${HCLOUD_TOKEN}"
+    volumes:
+      - ~/.kube:/etc/kube
