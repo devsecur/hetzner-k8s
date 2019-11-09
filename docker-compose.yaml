@@ -7,3 +7,6 @@ services:
       - "HCLOUD_TOKEN=${HCLOUD_TOKEN}"
     volumes:
       - ~/.kube:/etc/kube
+      - ~/.ssh:/root/.ssh
+    ports:
+      - "8001:8001"
