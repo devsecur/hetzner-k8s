@@ -25,6 +25,39 @@ hetzner-kube cluster kubeconfig k8s
 * Create Domains at https://my.freenom.com/domains.php pointing on master IP
 * Change IPs and Domains in ingress-nginx.yaml and ingress.yaml
 
+## Update k8s
+
+```
+ssh -i ~/.ssh/id_rsa root@<IP>
+apt update
+apt-cache policy kubeadm
+
+# replace x in 1.15.x-00 with the latest patch version
+apt-get update && apt-get install -y kubeadm=1.15.x-00 --allow-downgrade
+
+sudo kubeadm upgrade plan
+kubeadm upgrade apply v1.15.x
+kubeadm upgrade node
+
+apt-get update && apt-get install -y kubelet=1.15.x-00 kubectl=1.15.x-00 --allow-downgrade
+
+apt-get upgrade
+
+kubeadm upgrade plan
+
+kubeadm upgrade apply v1.16.0
+```
+
+
+## Install Volume Support
+
+```
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/csi-api/release-1.13/pkg/crd/manifests/csidriver.yaml
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/csi-api/release-1.13/pkg/crd/manifests/csinodeinfo.yaml
+kubectl apply -f mandatory/storage.yaml
+kubectl apply -f https://raw.githubusercontent.com/hetznercloud/csi-driver/master/deploy/kubernetes/hcloud-csi.yml
+```
+
 ## Install Ingress Controler for DNS and IP support
 
 ```
@@ -39,6 +72,12 @@ kubectl create namespace cert-manager
 kubectl label namespace cert-manager certmanager.k8s.io/disable-validation=true
 kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v0.8.1/cert-manager.yaml
 kubectl apply -f prod_issuer.yaml
+```
+
+## Deploy Database
+
+```
+kubectl apply -f database/postgres.yaml
 ```
 
 ## Install Application

@@ -62,7 +62,6 @@ spec:
   selector:
     app: default-http-backend
 ---
-
 kind: ConfigMap
 apiVersion: v1
 metadata:
@@ -225,7 +224,7 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: nginx-ingress-controller
-  namespace: ingress-nginx 
+  namespace: ingress-nginx
 spec:
   replicas: 1
   selector:
