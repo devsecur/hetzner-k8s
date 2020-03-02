@@ -101,3 +101,27 @@ kubectl apply -f https://raw.githubusercontent.com/spekt8/spekt8/master/fabric8-
 kubectl apply -f spekt8-deployment.yaml
 kubectl port-forward deployment/spekt8 3000:3000
 ```
+
+# Add Basic Auth
+
+```
+htpasswd -nb ${USER} ${PASSWORD} | openssl base64
+```
+
+Add result into auth.yaml on auth and den apply auth
+
+```
+apiVersion: v1
+data:
+  auth: <SECRET HERE>
+kind: Secret
+metadata:
+  name: basic-auth
+  namespace: echoserver
+  selfLink: /api/v1/namespaces/default/secrets/basic-auth
+type: Opaque
+```
+
+```
+kubectl apply -f auth.yaml
+```

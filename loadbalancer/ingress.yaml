@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: echoserver
+  name: adminnew
   namespace: echoserver
   annotations:
     kubernetes.io/tls-acme: "true"
@@ -10,6 +10,62 @@ metadata:
     nginx.ingress.kubernetes.io/auth-type: basic
     nginx.ingress.kubernetes.io/auth-secret: basic-auth
     nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required'
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "server: hide";
+      more_set_headers "X-Content-Type-Options: nosniff";
+      more_set_headers "X-Frame-Options: DENY";
+      more_set_headers "X-Xss-Protection: 1";
+spec:
+  tls:
+  - hosts:
+    - blab.masagin.de
+    - admin.masagin.tk
+    - admin.bucai.tk
+    secretName: letsencrypt-prod
+  rules:
+  - host: blab.masagin.de
+    http:
+      paths:
+      - path: /favicon.ico
+        backend:
+          serviceName: favicon
+          servicePort: 80
+      - path: /
+        backend:
+          serviceName: echoserver
+          servicePort: 80
+  - host: admin.masagin.tk
+    http:
+      paths:
+      - path: /favicon.ico
+        backend:
+          serviceName: favicon
+          servicePort: 80
+      - path: /
+        backend:
+          serviceName: echoserver
+          servicePort: 80
+  - host: admin.bucai.tk
+    http:
+      paths:
+      - path: /favicon.ico
+        backend:
+          serviceName: favicon
+          servicePort: 80
+      - path: /
+        backend:
+          serviceName: echoserver
+          servicePort: 80
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: echoserver
+  namespace: echoserver
+  annotations:
+    kubernetes.io/tls-acme: "true"
+    kubernetes.io/ingress.class: "nginx"
+    certmanager.k8s.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/configuration-snippet: |
       more_set_headers "server: hide";
       more_set_headers "X-Content-Type-Options: nosniff";
